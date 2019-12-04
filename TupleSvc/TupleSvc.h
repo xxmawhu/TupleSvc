@@ -33,10 +33,12 @@ class TupleSvc {
     SetArrayAddress(std::string type_name, NTuple::Array<double>*,
                     int max_length = 100);
     SetDecayMode(const DecayMode&);
+    InitTuple(NTuple:Tuple* tp);
 
    private:
     map<std::string, int> m_ItemIndex, m_ArrayIndex;
     InitItemIndex();
     InitArrayIndex();
+    DecayMode m_decayMode;
 };
 #endif
