@@ -1,0 +1,36 @@
+package TupleSvc 
+author "Xin-Xin Ma"  <xxmawhu@163.com>
+
+branches cmt src TupleSvc 
+use BesPolicy           BesPolicy-01-*
+use GaudiInterface      GaudiInterface-01-*  External
+use CERNLIB             CERNLIB-*            External
+use DstEvent            DstEvent-*           Event
+use McTruth             McTruth-*            Event
+use BesROOT             BesROOT-*            External
+use CERNLIB             CERNLIB-*            External
+use ReconEvent          ReconEvent-*         Event
+use RawDataProviderSvc  RawDataProviderSvc-* Event
+use EvtRecEvent         EvtRecEvent-*        Event
+use MdcRecEvent         MdcRecEvent-*        Mdc
+use DedxCorrecSvc       DedxCorrecSvc-*      Mdc
+#use SimplePIDSvc        SimplePIDSvc-*       Utilities
+use TofRecEvent         TofRecEvent-*        Tof
+use EmcRecEventModel    EmcRecEventModel-*   Emc
+use MucRecEvent         MucRecEvent-*        Muc
+use ExtEvent            ExtEvent-*           Event
+use BesDChain    BesDChain-*     Event
+ 
+use VertexFit    VertexFit-*   Analysis
+use ParticleID   ParticleID-*  Analysis
+ 
+library TupleSvc *.cxx
+ 
+macro_remove fflags "-fmessage-length=0 2"
+
+ 
+#apply_pattern component_library
+apply_pattern installed_library
+#apply_pattern package_linkopts
+macro_append TupleSvc_cppflags " -DYDEBUG -DMEMWATCH -DMEMWATCH_STDIO  -Df2cFortran -w"
+macro_append TupleSvc_fflags "  -fno-automatic -ffixed-line-length-132 -fbackslash  -w"
