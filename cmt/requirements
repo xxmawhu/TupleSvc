@@ -24,6 +24,8 @@ use BesDChain    BesDChain-*     Event
 use VertexFit    VertexFit-*   Analysis
 use ParticleID   ParticleID-*  Analysis
  
+use HadronInfo  HadronInfo-*       Utilities
+
 library TupleSvc *.cxx
  
 macro_remove fflags "-fmessage-length=0 2"
