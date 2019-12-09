@@ -9,13 +9,14 @@
 #   Describe      :
 #
 # ====================================================*/
-#ifndef _DECAYMODE_H
-#define _DECAYMODE_H
+#ifndef TupleSvc_DecayTree_H
+#define TupleSvc_DecayTree_H
 #include "HadronInfo/ParticleInf.h"
 #include <vector>
 using std::vector;
 class DecayTree {
    public:
+    DecayTree();
     DecayTree(const vector<int>& fid);
     virtual ~DecayTree();
     // the particle name with index, such as pion, pion2
@@ -24,6 +25,7 @@ class DecayTree {
     const int& index(const string& particle_name);
     // the length of particle list
     const int& size();
+    const int& PID(const int&);
     // the the decay mode of the mode of particle `i`
     const DecayTree& decay(const int& i);
 
