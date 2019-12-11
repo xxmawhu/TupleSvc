@@ -20,6 +20,7 @@ class DecayTree {
     DecayTree(const vector<int>& fid);
     virtual ~DecayTree();
     // the particle name with index, such as pion, pion2
+    const vector<int> & getFID();
     const string& ParicleName(const int&);
     // return the index, input the particle name
     const int& index(const string& particle_name);

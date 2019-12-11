@@ -46,6 +46,9 @@ DecayTree::~DecayTree() {
     m_particleIndex.clear();
     m_particleName.clear();
 }
+const vector<int> & DecayTree::getFID(){
+    return m_finalParticleID;
+}
 // the particle name with index, such as pion, pion2
 const string &DecayTree::ParicleName(const int &i) { return m_particleName[i]; }
 
