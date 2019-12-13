@@ -53,6 +53,20 @@ class TupleSvc {
               const int& value);
     void Fill(const int& particle_index, const string& observable,
               const HepLorentzVector& p4);
+    void SaveInfo(const CDCandidate& signal);
+    template <class ParticleInfo>
+    void SaveInfo(ParticleInfo particleinfo, const int&i){
+        vector<string> intInf = particleinfo.GetIntInf(); 
+        vector<string> doubleInf = particleinfo.GetDoubleInf(); 
+        vector<string> arrayInf = particleinfo.GetP4Inf(); 
+        vector<string>::const_iterator itr = doubleInf.begin();
+        for(; itr != doubleInf.end(); itr++){
+            Fill(i, *itr, particleinfo.GetDoubleInfo(*itr));
+        }
+        for(itr=arrayInf.begin(); itr != arrayInf.end(); itr++){
+            Fill(i, *itr, particleinfo.GetLorentzVector(*itr));
+        }
+    }
 
    private:
     NTuple::Item<int>* m_intItemItr;

@@ -83,21 +83,21 @@ bool TupleSvc::InitTuple(NTuple::Tuple* tuple) {
     }
     // add int
     for (map<string, int>::iterator itr = m_intItemIndex.begin();
-         itr != m_intItemIndex.end(); ++itr) {
+         itr != m_intItemIndex.end(); itr++) {
         tuple->addItem(itr->first, m_intItemItr[itr->second]);
         cout << "addItem(" << itr->first << ") Type: int" << endl;
     }
 
     // add double
     for (map<string, int>::iterator itr = m_doubleItemIndex.begin();
-         itr != m_doubleItemIndex.end(); ++itr) {
+         itr != m_doubleItemIndex.end(); itr++) {
         tuple->addItem(itr->first, m_doubleItemItr[itr->second]);
         cout << "addItem(" << itr->first << ") Type: double" << endl;
     }
 
     // add p4
     for (map<string, int>::iterator itr = m_ArrayIndex.begin();
-         itr != m_ArrayIndex.end(); ++itr) {
+         itr != m_ArrayIndex.end(); itr++) {
         tuple->addItem(itr->first, 4, m_arrayItemItr[itr->second]);
         cout << "addItem(" << itr->first << ", 4) Type: array" << endl;
     }
@@ -201,7 +201,52 @@ void TupleSvc::Fill(const int& particle_index, const string& observable,
                     const int& value) {
     Fill(m_decayMode.ParicleName(particle_index), observable, value);
 }
+
 void TupleSvc::Fill(const int& particle_index, const string& observable,
                     const HepLorentzVector& p4) {
     Fill(m_decayMode.ParicleName(particle_index), observable, p4);
+}
+
+void TupleSvc::SaveInfo(const CDCandidate& signal) {
+    for (int i = 0; i < m_decayMode.size(); ++i) {
+        int pid = abs(m_decayMode.PID(i));
+        if (pid == 310) {
+            KsInfo ksInfo(signal.decay().child(i));
+            SaveInfo(ksInfo, i);
+            return;
+        }
+        if (pid == 3122) {
+            LamInfo lamInfo(signal.decay().child(i));
+            SaveInfo(lamInfo, i);
+            return;
+        }
+        if (pid == 11) {
+            ElectronInfo electronInfo(signal.decay().child(i));
+            return SaveInfo(electronInfo, i);
+        }
+        if (pid == 2212) {
+            ProtonInfo protonInfo(signal.decay().child(i));
+            return SaveInfo(protonInfo, i);
+        }
+        if (pid == 22) {
+            ShowerInfo showerInfo(signal.decay().child(i));
+            return SaveInfo(showerInfo, i);
+        }
+        if (pid == 211) {
+            PionInfo pionInfo(signal.decay().child(i));
+            return SaveInfo(pionInfo, i);
+        }
+        if (pid == 321) {
+            KaonInfo kaonInfo(signal.decay().child(i));
+            return SaveInfo(kaonInfo, i);
+        }
+        if (pid == 111) {
+            Pi0Info pi0Info(signal.decay().child(i));
+            return SaveInfo(pi0Info, i);
+        }
+        if (pid == 322) {
+            EtaInfo etaInfo(signal.decay().child(i));
+            return SaveInfo(etaInfo, i);
+        }
+    }
 }
