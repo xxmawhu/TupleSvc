@@ -13,6 +13,7 @@
 #define TUPLESVC_H
 #include "GaudiKernel/NTuple.h"
 #include "CLHEP/Vector/LorentzVector.h"
+#include "HadronInfo/AvailableInfo.h"
 #include "TupleSvc/DecayTree.h"
 #include <map>
 #include <string>
@@ -62,5 +63,6 @@ class TupleSvc {
     DecayTree m_decayMode;
     void InitItemIndex();
     // void InitArrayIndex();
+    const AvailableInfo getAvialInfo(const int&);
 };
 #endif
