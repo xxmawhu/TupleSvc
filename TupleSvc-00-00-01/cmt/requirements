@@ -6,8 +6,12 @@ use BesPolicy           BesPolicy-01-*
 use EvtRecEvent         EvtRecEvent-*        Event
 use BesDChain    BesDChain-*     Event
  
-use HadronInfo  HadronInfo-*       Utilities
+use HadronInfo HadronInfo-* Utilities
 
-library TupleSvc *.cxx
  
-apply_pattern component_library
+apply_pattern installed_linkopts
+library TupleSvc *.cxx
+apply_pattern package_linkopts
+apply_pattern package_stamps
+apply_pattern ld_library_path
+apply_pattern package_shlibflags

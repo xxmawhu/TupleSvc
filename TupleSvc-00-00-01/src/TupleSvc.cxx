@@ -20,7 +20,7 @@
 #include "HadronInfo/EtaInfo.h"
 #include "HadronInfo/LamInfo.h"
 #include "HadronInfo/KsInfo.h"
-#include "HadronInfo/OmegaInfo.h"
+#include "HadronInfo/OmegamInfo.h"
 #include "TupleSvc/TupleSvc.h"
 #include "TupleSvc/DecayTree.h"
 #include <cstdlib>
