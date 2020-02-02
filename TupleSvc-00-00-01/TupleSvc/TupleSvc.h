@@ -38,6 +38,8 @@ class TupleSvc {
     // template <class TYPE>
     void SetArrayAddress(const string& type_name, NTuple::Array<double>*,
                          const int& max_length = 100);
+    void SetArrayAddress(const string& type_name, NTuple::Array<int>*,
+                         const int& max_length = 100);
     void SetDecayTree(const DecayTree&);
     bool InitTuple(NTuple::Tuple* tp);
     void Fill(const string& particle_name, const string& observable,
