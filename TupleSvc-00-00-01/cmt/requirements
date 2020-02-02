@@ -10,7 +10,7 @@ use HadronInfo HadronInfo-* Utilities
 
  
 apply_pattern installed_linkopts
-library TupleSvc *.cxx
+library TupleSvc *.cpp
 apply_pattern package_linkopts
 apply_pattern package_stamps
 apply_pattern ld_library_path
