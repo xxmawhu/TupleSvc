@@ -69,11 +69,30 @@ class TupleSvc {
             Fill(i, *itr, particleinfo.GetLorentzVector(*itr));
         }
     }
+    // over load the operator <<
+    // usage: tupleSvc << hadronInfo
+    // function: save all aviable information to the tupleSvc
+    template <class T>
+    TupleSvc& operator<<(const T&  y) {
+        cout << this->m_intLength << endl;
+        return *this; 
+    }
+    // over load the operator >>
+    // usage: tupleSvc >> hadronInfo;
+    // function: tupleSvc provide a address for the hadronInfo accordind to its
+    // information, for example, the type, size,
+    template <class T>
+    TupleSvc& operator>>(const T&  y) {
+        cout << y << endl;
+        return *this; 
+    }
+
 
    private:
     NTuple::Item<int>* m_intItemItr;
     NTuple::Item<double>* m_doubleItemItr;
     NTuple::Array<double>* m_arrayItemItr;
+    NTuple::Array<int>* m_arrayItemIntItr;
     int m_intLength, m_doubleLength, m_arrayLength;
     map<std::string, int> m_doubleItemIndex, m_ArrayIndex, m_intItemIndex;
     DecayTree m_decayMode;
