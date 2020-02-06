@@ -22,7 +22,7 @@ using std::string;
 using std::map;
 class TupleSvc {
    public:
-    TupleSvc();
+    TupleSvc(int maxI=20, int maxD=200, int maxVi=10, int maxVd=20);
     ~TupleSvc();
     // define only one double type Item, such as
     //   `NTuple::Item<double> m_doubleInfo[100]` in the head file,
