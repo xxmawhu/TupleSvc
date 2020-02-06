@@ -26,227 +26,271 @@
 #include <cstdlib>
 
 using std::string;
+using std::map;
 using std::cout;
 using std::endl;
 
-TupleSvc::TupleSvc() : m_intItemItr(0), m_doubleItemItr(0), m_arrayItemItr(0) {
-    vector<int> fid;
-    m_decayMode = DecayTree(fid);
+TupleSvc::TupleSvc()
+    : I_Ptr(0), D_Ptr(0), Vd_Ptr(0), m_tp(0) {
 }
 
 TupleSvc::~TupleSvc() {}
 
 void TupleSvc::SetItemAddress(const string& type_name,
-                              NTuple::Item<double>* m_tuple,
+                              NTuple::Item<double>* tuple,
                               const int& max_length) {
-    m_doubleItemItr = m_tuple;
-    m_doubleLength = max_length;
+    D_Ptr = tuple;
+    m_MaxSizeD = max_length;
 }
 
 void TupleSvc::SetItemAddress(const string& type_name,
-                              NTuple::Item<int>* m_tuple,
+                              NTuple::Item<int>* tuple,
                               const int& max_length) {
-    m_intItemItr = m_tuple;
-    m_intLength = max_length;
+    I_Ptr = tuple;
+    m_MaxSizeI = max_length;
 }
 
 void TupleSvc::SetArrayAddress(const string& type_name,
-                               NTuple::Array<double>* m_tuple,
+                               NTuple::Array<double>* tuple,
                                const int& max_length) {
-    m_arrayItemItr = m_tuple;
-    m_arrayLength = max_length;
+    Vd_Ptr = tuple;
+    m_MaxSizeVd = max_length;
 }
 
-void TupleSvc::SetDecayTree(const DecayTree& decayMode) {
-    m_decayMode = decayMode;
+void TupleSvc::SetArrayAddress(const string& type_name,
+                               NTuple::Array<int>* tuple,
+                               const int& max_length) {
+    Vi_Ptr = tuple;
+    m_MaxSizeVi = max_length;
 }
 
-bool TupleSvc::InitTuple(NTuple::Tuple* tuple) {
-    this->InitItemIndex();
-    if (m_doubleItemIndex.size() > m_doubleLength) {
-        cout << "Error: the length of NTuple::Item<double> is larger than "
-             << m_doubleLength << endl << "the length should be larger than  "
-             << m_doubleItemIndex.size() << endl;
-        std::exit(1);
+bool TupleSvc::BindTuple(NTuple::Tuple *tuple) {
+    if (m_tp) {
+        cout << "Error:: this TupleSvc is binding with a TupleSvc already!!!" << endl;
+        return false; 
     }
-    if (m_intItemIndex.size() > m_intLength) {
-        cout << "Error: the length of NTuple::Item<int> is larger than "
-             << m_doubleLength << endl << "the length should be larger than  "
-             << m_intItemIndex.size() << endl;
-        std::exit(1);
-    }
-    if (m_ArrayIndex.size() > m_arrayLength) {
-        cout << "Error: the length of NTuple::Array<double> is larger than "
-             << m_arrayLength << endl << "the length should be larger than  "
-             << m_ArrayIndex.size() << endl;
-        std::exit(1);
-    }
-    // add int
-    for (map<string, int>::iterator itr = m_intItemIndex.begin();
-         itr != m_intItemIndex.end(); itr++) {
-        tuple->addItem(itr->first, m_intItemItr[itr->second]);
-        cout << "addItem(" << itr->first << ") Type: int" << endl;
-    }
+    m_tp = tuple;
+    return true;
+}
 
-    // add double
-    for (map<string, int>::iterator itr = m_doubleItemIndex.begin();
-         itr != m_doubleItemIndex.end(); itr++) {
-        tuple->addItem(itr->first, m_doubleItemItr[itr->second]);
-        cout << "addItem(" << itr->first << ") Type: double" << endl;
-    }
-
-    // add p4
-    for (map<string, int>::iterator itr = m_ArrayIndex.begin();
-         itr != m_ArrayIndex.end(); itr++) {
-        tuple->addItem(itr->first, 4, m_arrayItemItr[itr->second]);
-        cout << "addItem(" << itr->first << ", 4) Type: array" << endl;
+void TupleSvc::Write() {
+    if (m_tp) {
+        m_tp->write();
+    } else {
+        cout << "The TupleSvc is not binded properly" << endl;
     }
 }
 
-const AvailableInfo TupleSvc::getAvialInfo(const int& pid) {
-    if (pid == 310) {
-        KsInfo ksInfo;
-        return ksInfo;
+/*
+template <class InfoT>
+bool TupleSvc::Register(const InfoT& gInfo) {
+    if (m_tp == NULL) {
+        return false;
     }
-    if (pid == 3122) {
-        LamInfo lamInfo;
-        return lamInfo;
+    // store the int type variable
+    std::vector<std::string> tmpAllInfo = gInfo.GetType("int");
+    std::vector<std::string>::iterator itr;
+    int intP = i_I.size(), VintP = i_Vi.size();
+    // first deal with the un-index item
+    for (itr = tmpAllInfo.begin(); itr != tmpAllInfo.end(); ++itr) {
+        if (gInfo.GetIndex(*itr) != std::string("NULL")) {
+            continue;
+        }
+        if (i_I.size() == m_MaxSizeI) {
+            std::cout << "Error, the maximum Item<int> size is " << m_MaxSizeI
+                      << ", but now we are adding the " << m_MaxSizeI + 1
+                      << "-th Item" << std::endl;
+            return false;
+        }
+        m_tp->addItem(*itr, I_Ptr[intP]);
+        i_I.insert(std::make_pair(*itr, intP));
+        intP += 1;
     }
-    if (pid == 11) {
-        ElectronInfo electronInfo;
-        return electronInfo;
+    // add the indexTerm
+    for (itr = tmpAllInfo.begin(); itr != tmpAllInfo.end(); ++itr) {
+        if (gInfo.GetIndex(*itr) == std::string("NULL")) {
+            continue;
+        }
+        string& index = gInfo.GetIndex(*itr);
+        if (std::find(i_I.begin(), i_I.end(), index) ==
+            i_I.end()) {
+            std::cout << "Error, When add item " << *itr
+                      << ", we are told need one  Item<int> " << index
+                      << "but, we can't find it now!" << std::endl;
+            return false;
+        }
+        int i = i_I[index];
+        if (i_Vi.size() >= m_MaxSizeVi) {
+            std::cout << "Error, the maximum Array<double> size is "
+                      << m_MaxSizeVi << ", but now we are adding the "
+                      << m_MaxSizeVi + 1 << "-th Item" << std::endl;
+            return false;
+        }
+        m_tp->addIndexedItem(*itr, I_Ptr[i], Vi_Ptr[VintP]);
+        i_Vi.insert(std::make_pair(*itr, VintP));
+        VintP += 1;
     }
-    if (pid == 2212) {
-        ProtonInfo protonInfo;
-        return protonInfo;
+    // add double type
+    tmpAllInfo = gInfo.GetType("double");
+    int dI = i_D.size(), dVI = i_Vd.size();
+    for (itr = tmpAllInfo.begin(); itr != tmpAllInfo.end(); ++itr) {
+        string& index = gInfo.GetIndex(*itr);
+        int length = gInfo.GetLength(*itr);
+        if (length == 1) {
+            if (i_D.size() >= m_MaxSizeD) {
+                std::cout << "Error, the maximum Item<double> size is "
+                          << m_MaxSizeD << ", but now we are adding the "
+                          << m_MaxSizeD + 1 << "-th Item" << std::endl;
+                return false;
+            }
+            m_tp->addItem(*itr, D_Ptr[dI]);
+            i_D.insert(std::make_pair(*itr, dI));
+            dI += 1;
+            continue;
+        }
+        if (index == "NULL") {
+            if (i_Vd.size() >= m_MaxSizeVd) {
+                std::cout << "Error, the maximum Array<double> size is "
+                          << m_MaxSizeVd << ", but now we are adding the "
+                          << m_MaxSizeVd + 1 << "-th Item" << std::endl;
+                return false;
+            }
+            m_tp->addItem(*itr, length, Vd_Ptr[dVI]);
+            i_Vd.insert(std::make_pair(*itr, dVI));
+            dVI += 1;
+            continue;
+        }
+        // index info
+        if (std::find(i_I.begin(), i_I.end(), index) ==
+            i_I.end()) {
+            std::cout << "Error, When add item " << *itr
+                      << ", we are told need one  Item<int> " << index
+                      << "but, we can't find it now!" << std::endl;
+            return false;
+        }
+        int i = i_I[index];
+        m_tp->addIndexedItem(*itr, I_Ptr[i], Vd_Ptr[dVI]);
+        i_Vd.insert(std::make_pair(*itr, dVI));
+        dVI += 1;
     }
-    if (pid == 22) {
-        ShowerInfo showerInfo;
-        return showerInfo;
+    // add LorentzVector
+    tmpAllInfo = gInfo.GetType("double");
+    dVI = i_Vd.size();
+    for (itr = tmpAllInfo.begin(); itr != tmpAllInfo.end(); ++itr) {
+        if (i_Vd.size() >= m_MaxSizeVd) {
+            std::cout << "Error, the maximum Array<double> size is "
+                      << m_MaxSizeVd << ", but now we are adding the "
+                      << m_MaxSizeVd + 1 << "-th Item" << std::endl;
+            return false;
+        }
+        m_tp->addItem(*itr, 4, Vd_Ptr[dVI]);
+        i_Vd.insert(std::make_pair(*itr, dVI));
+        dVI += 1;
     }
-    if (pid == 211) {
-        PionInfo pionInfo;
-        return pionInfo;
-    }
-    if (pid == 321) {
-        KaonInfo kaonInfo;
-        return kaonInfo;
-    }
-    if (pid == 111) {
-        Pi0Info pi0Info;
-        return pi0Info;
-    }
-    if (pid == 322) {
-        EtaInfo etaInfo;
-        return etaInfo;
-    }
+    // done
+    // check the length
 }
 
-void TupleSvc::InitItemIndex() {
-    // only consider the following if(pid==: KsInfo, LamInfo, OmegaInfo,
-    // TrackInfo: pion, kaon, proton, photon
-    // Pi0Info, EtaInfo
-    int int_tmp_index = 0, double_tmp_index = 0, array_tmp_index = 0;
-    int PID;
-    for (int i = 0; i < m_decayMode.size(); ++i) {
-        const string& name = m_decayMode.ParicleName(i);
-        PID = m_decayMode.PID(i);
-        AvailableInfo avaiableInfo = getAvialInfo(abs(PID));
-        const vector<string>& doubleList = avaiableInfo.GetDoubleInf();
-        for (vector<string>::const_iterator itr = doubleList.begin();
-             itr != doubleList.end(); ++itr) {
-            m_doubleItemIndex.insert(
-                pair<string, int>(name + (*itr), double_tmp_index++));
+template <class InfoT>
+TupleSvc& TupleSvc::operator<<(const InfoT&  gInfo) {
+    // double
+    vector<string> allInfo = gInfo.GetType("double");
+    vector<string>::iterator itr;
+    int index, length, iInfo;
+    double tmpInfo;
+    vector<double> Vd;
+    string gIndex;
+    int i;
+    for (itr = allInfo.begin(); itr != allInfo.end(); itr++){
+        int length = gInfo.GetLength(*itr);
+        string gIndex = gInfo.GetIndex(*itr);
+        // check the index, if the index exist, the assign index first!
+        if (gIndex != "NULL") {
+            gInfo.GetInfoI(gIndex, i);
+            I_Ptr[i_I[gIndex]] = i;
         }
-        const vector<string>& intList = avaiableInfo.GetIntInf();
-        for (vector<string>::const_iterator itr = intList.begin();
-             itr != intList.end(); ++itr) {
-            m_intItemIndex.insert(
-                pair<string, int>(name + (*itr), int_tmp_index++));
+        // check the length, if the length is 1, then choose D_Ptr,
+        // and i_D to store the target value
+        // if not, choose the assgin to a list
+        if (length == 1) {
+            // check exist
+            if (i_D.find(*itr) == i_D.end()){
+                cout << "Error, sorry we didn't find \"" << gInfo.GetName() <<"\". "
+                    << *itr << "()"
+                    << ", you should Register it first at Initial()" << endl;
+                continue;
+            }
+            index = i_D[*itr];
+            gInfo.GetInfoD(*itr, tmpInfo);
+            this->D_Ptr[index] = tmpInfo;
+        }  else {
+            // check exist
+            if (i_Vd.find(*itr) == i_Vd.end()){
+                cout << "Error, sorry we didn't find \"" << gInfo.GetName() <<"\". "
+                    << *itr << "()"
+                    << ", you should Register it first at Initial()" << endl;
+                continue;
+            }
+            index = i_Vd[*itr];
+            gInfo.GetInfoD(*itr, Vd);
+            for (int i = 0; i < Vd.size(); ++i) {
+                this->Vd_Ptr[index][i] = Vd[i];
+            }
+        }  
+    }
+    // int
+    vector<int> Vi;
+    allInfo = gInfo.GetType("int");
+    for (itr = allInfo.begin(); itr != allInfo.end(); ++itr){
+        gIndex = gInfo.GetIndex(*itr);
+        if (gIndex != "NULL") {
+            gInfo.GetInfoI(gIndex, i);
+            I_Ptr[i_I[gIndex]] = i;
         }
-        const vector<string>& arrayList = avaiableInfo.GetP4Inf();
-        for (vector<string>::const_iterator itr = arrayList.begin();
-             itr != arrayList.end(); ++itr) {
-            m_ArrayIndex.insert(
-                pair<string, int>(name + (*itr), array_tmp_index));
+        length = gInfo.GetLength(*itr);
+        if (length == 1) {
+            // check exist
+            if (i_I.find(*itr) == i_I.end()){
+                cout << "Error, sorry we didn't find \"" << gInfo.GetName() <<"\". "
+                    << *itr << "()"
+                    << ", you should Register it first at Initial()" << endl;
+                continue;
+            }
+            index = i_I[*itr];
+            gInfo.GetInfoI(*itr, i);
+            this->I_Ptr[index] = i;
+            // check exist
+        }  else {
+            if (i_I.find(*itr) == i_I.end()){
+                cout << "Error, sorry we didn't find \"" << gInfo.GetName() <<"\". "
+                    << *itr << "()"
+                    << ", you may be need to Register it first at Initial()" << endl 
+                    << ", or check the type: <int> or <double>" << endl;
+                continue;
+            }
+            index = i_Vi[*itr];
+            gInfo.GetInfoVi(*itr, Vi);
+            for (int i = 0; i < Vi.size(); ++i) {
+                this->Vi_Ptr[index][i] = Vi[i];
+            }
+        }  
+    }
+    // HepLorentzVector
+    allInfo = gInfo.GetType("HepLorentzVector");
+    HepLorentzVector p4;
+    for (itr = allInfo.begin(); itr != allInfo.end(); itr++){
+        if (i_Vd.find(*itr) == i_Vd.end()){
+            cout << "Error, sorry we didn't find \"" << gInfo.GetName() <<"\". "
+                << *itr << "()"
+                << ", you should Register it first at Initial()" << endl;
+            continue;
+        }
+        gInfo.GetInfoH(*itr, p4);
+        index = i_Vd[*itr];
+        for(int i=0; i<4; ++i) {
+            this->Vd_Ptr[index][i] = p4[i];
         }
     }
+    return *this; 
 }
-
-void TupleSvc::Fill(const string& particle_name, const string& observable,
-                    const int& value) {
-    int i = m_intItemIndex[particle_name + observable];
-    m_intItemItr[i] = value;
-}
-
-void TupleSvc::Fill(const string& particle_name, const string& observable,
-                    const double& value) {
-    int i = m_doubleItemIndex[particle_name + observable];
-    m_doubleItemItr[i] = value;
-}
-
-void TupleSvc::Fill(const string& particle_name, const string& observable,
-                    const HepLorentzVector& p4) {
-    int index = m_ArrayIndex[particle_name + observable];
-    for (int i = 0; i < 4; ++i) {
-        m_arrayItemItr[index][i] = p4[i];
-    }
-}
-
-void TupleSvc::Fill(const int& particle_index, const string& observable,
-                    const double& value) {
-    Fill(m_decayMode.ParicleName(particle_index), observable, value);
-}
-void TupleSvc::Fill(const int& particle_index, const string& observable,
-                    const int& value) {
-    Fill(m_decayMode.ParicleName(particle_index), observable, value);
-}
-
-void TupleSvc::Fill(const int& particle_index, const string& observable,
-                    const HepLorentzVector& p4) {
-    Fill(m_decayMode.ParicleName(particle_index), observable, p4);
-}
-
-void TupleSvc::SaveInfo(const CDCandidate& signal) {
-    for (int i = 0; i < m_decayMode.size(); ++i) {
-        int pid = abs(m_decayMode.PID(i));
-        if (pid == 310) {
-            KsInfo ksInfo(signal.decay().child(i));
-            SaveInfo(ksInfo, i);
-            return;
-        }
-        if (pid == 3122) {
-            LamInfo lamInfo(signal.decay().child(i));
-            SaveInfo(lamInfo, i);
-            return;
-        }
-        if (pid == 11) {
-            ElectronInfo electronInfo(signal.decay().child(i));
-            return SaveInfo(electronInfo, i);
-        }
-        if (pid == 2212) {
-            ProtonInfo protonInfo(signal.decay().child(i));
-            return SaveInfo(protonInfo, i);
-        }
-        if (pid == 22) {
-            ShowerInfo showerInfo(signal.decay().child(i));
-            return SaveInfo(showerInfo, i);
-        }
-        if (pid == 211) {
-            PionInfo pionInfo(signal.decay().child(i));
-            return SaveInfo(pionInfo, i);
-        }
-        if (pid == 321) {
-            KaonInfo kaonInfo(signal.decay().child(i));
-            return SaveInfo(kaonInfo, i);
-        }
-        if (pid == 111) {
-            Pi0Info pi0Info(signal.decay().child(i));
-            return SaveInfo(pi0Info, i);
-        }
-        if (pid == 322) {
-            EtaInfo etaInfo(signal.decay().child(i));
-            return SaveInfo(etaInfo, i);
-        }
-    }
-}
+*/
