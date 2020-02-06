@@ -22,24 +22,14 @@ using std::string;
 using std::map;
 class TupleSvc {
    public:
-    TupleSvc(int maxI=20, int maxD=200, int maxVi=10, int maxVd=20);
-    ~TupleSvc();
     // define only one double type Item, such as
     //   `NTuple::Item<double> m_doubleInfo[100]` in the head file,
     // then use this address to store and write all `double` information,
     // such as `mass`, `chisq`, `decay length`
     // the default length is `100`
     // It seems that only `double` is possible, so drop the template
-    // template <class TYPE>
-    void SetItemAddress(const string& type_name, NTuple::Item<double>*,
-                        const int& max_length = 100);
-    void SetItemAddress(const string& type_name, NTuple::Item<int>*,
-                        const int& max_length = 100);
-    // template <class TYPE>
-    void SetArrayAddress(const string& type_name, NTuple::Array<double>*,
-                         const int& max_length = 100);
-    void SetArrayAddress(const string& type_name, NTuple::Array<int>*,
-                         const int& max_length = 100);
+    TupleSvc(int maxI=20, int maxD=200, int maxVi=10, int maxVd=20);
+    ~TupleSvc();
     bool BindTuple(NTuple::Tuple* tp);
     void Write();
     
@@ -48,7 +38,6 @@ class TupleSvc {
     // usage: tupleSvc << hadronInfo
     // function: save all aviable information to the tupleSvc
     template <class T> TupleSvc& operator<<(const T&  y);
-
 
    private:
     NTuple::Tuple *m_tp;

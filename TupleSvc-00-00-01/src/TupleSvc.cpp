@@ -49,34 +49,6 @@ TupleSvc::~TupleSvc() {
     delete[] Vd_Ptr;
 }
 
-void TupleSvc::SetItemAddress(const string& type_name,
-                              NTuple::Item<double>* tuple,
-                              const int& max_length) {
-    D_Ptr = tuple;
-    m_MaxSizeD = max_length;
-}
-
-void TupleSvc::SetItemAddress(const string& type_name,
-                              NTuple::Item<int>* tuple,
-                              const int& max_length) {
-    I_Ptr = tuple;
-    m_MaxSizeI = max_length;
-}
-
-void TupleSvc::SetArrayAddress(const string& type_name,
-                               NTuple::Array<double>* tuple,
-                               const int& max_length) {
-    Vd_Ptr = tuple;
-    m_MaxSizeVd = max_length;
-}
-
-void TupleSvc::SetArrayAddress(const string& type_name,
-                               NTuple::Array<int>* tuple,
-                               const int& max_length) {
-    Vi_Ptr = tuple;
-    m_MaxSizeVi = max_length;
-}
-
 bool TupleSvc::BindTuple(NTuple::Tuple *tuple) {
     if (m_tp) {
         cout << "Error:: this TupleSvc is binding with a TupleSvc already!!!" << endl;
