@@ -21,12 +21,15 @@ class DecayTree {
     virtual ~DecayTree();
     // the particle name with index, such as pion, pion2
     const vector<int> & getFID();
-    const string& ParicleName(const int&);
+    string GetName(const int& i) {
+        return ParicleName(i);
+    }
+    string ParicleName(const int&);
     // return the index, input the particle name
     const int& index(const string& particle_name);
     // the length of particle list
-    const int& size();
-    const int& PID(const int&);
+    const int size();
+    const int PID(const int&);
     // the the decay mode of the mode of particle `i`
     const DecayTree& decay(const int& i);
 

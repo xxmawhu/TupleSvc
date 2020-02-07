@@ -13,7 +13,6 @@
 #define TUPLESVC_H
 #include "GaudiKernel/NTuple.h"
 #include "CLHEP/Vector/LorentzVector.h"
-#include "HadronInfo/AvailableInfo.h"
 #include "TupleSvc/DecayTree.h"
 #include <map>
 #include <string>
@@ -266,3 +265,5 @@ TupleSvc& TupleSvc::operator<<(const InfoT&  gInfo) {
     }
     return *this; 
 }
+
+static TupleSvc gTupleSvc;
