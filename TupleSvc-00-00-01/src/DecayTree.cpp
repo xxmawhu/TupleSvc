@@ -48,12 +48,14 @@ DecayTree::~DecayTree() {
     m_particleName.clear();
 }
 
-const vector<int> &DecayTree::getFID() { return m_finalParticleID; }
+const vector<int> &DecayTree::getFID() const { return m_finalParticleID; }
 
 // the particle name with index, such as pion, pion2
-string DecayTree::ParicleName(const int &i) { return m_particleName[i]; }
+const string DecayTree::GetName(const int &i) const {
+    return m_particleName[i];
+}
 
-const int& DecayTree::index(const string &particle_name) {
+const int DecayTree::Index(const string &particle_name) {
     vector<string>::iterator p =
         std::find(m_particleName.begin(), m_particleName.end(), particle_name);
     if (p != m_particleName.end()) {
@@ -63,9 +65,11 @@ const int& DecayTree::index(const string &particle_name) {
     }
 }
 
-const int DecayTree::size() { return m_finalParticleID.size(); }
+const int DecayTree::size() const { return m_finalParticleID.size(); }
 
-const int DecayTree::PID(const int &i) { return abs(m_finalParticleID[i]); }
+const int DecayTree::PID(const int &i) const {
+    return abs(m_finalParticleID[i]);
+}
 
 const DecayTree &DecayTree::decay(const int &i) {
     vector<int> m_tmp;

@@ -13,14 +13,7 @@
 #include <string>
 #include "HadronInfo/gHadronInfo.h"
 #include "TupleSvc/DecayChainSvc.h"
+#include "HadronInfo/gHadronInfo.h"
 using std::string;
 using std::cout;
 using std::endl;
-
-void DecayChainSvc::operator>>(TupleSvc& tupleSvc) {
-
-}
-
-void DecayChainSvc::Feed(const CDCandidate& best){
-
-}

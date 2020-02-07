@@ -21,24 +21,23 @@
 #include "BesDChain/CDDecayList.h"
 class DecayChainSvc {
    public:
-    DecayChainSvc(){};
-    ~DecayChainSvc(){};
-    template <class T> bool SubRegister(const T& aInfo, TupleSvc& tupleSvc){
+    DecayChainSvc() {};
+    ~DecayChainSvc() {};
+    void SetDecayTree(const DecayTree& decayTree) { m_decayTree = decayTree; }
+    template <class T>
+    bool SubRegister(T& aInfo, TupleSvc& tupleSvc) {
         return tupleSvc.Register(aInfo);
     }
-    bool BulkRegister(DecayTree& decayTree, TupleSvc&);
-    bool BulkRegister(TupleSvc& tupleSvc){
+    bool BulkRegister(const DecayTree& decayTree, TupleSvc&);
+    bool BulkRegister(TupleSvc& tupleSvc) {
         return this->BulkRegister(m_decayTree, tupleSvc);
     }
-    void Feed(const CDCandidate& best);
-    void operator>>(TupleSvc&);
-    void SetDecayTree(const DecayTree& decayTree) {
-        m_decayTree = decayTree;
-    }
+
+    void Express(const CDCandidate& best, TupleSvc& tupleSvc);
 
    private:
     DecayTree m_decayTree;
-    //CDDecayList::iterator m_BestCandidate;
+    // CDDecayList::iterator m_BestCandidate;
 };
 #endif  // _DECAYMODE_H
 

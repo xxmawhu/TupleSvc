@@ -27,19 +27,21 @@ class TupleSvc {
     // such as `mass`, `chisq`, `decay length`
     // the default length is `100`
     // It seems that only `double` is possible, so drop the template
-    TupleSvc(int maxI=20, int maxD=200, int maxVi=10, int maxVd=20);
+    TupleSvc(int maxI = 20, int maxD = 200, int maxVi = 10, int maxVd = 20);
     ~TupleSvc();
     bool BindTuple(NTuple::Tuple* tp);
     void Write();
-    
-    template <class T> bool Register(const T&);
+
+    template <class T>
+    bool Register(T&);
     // over load the operator <<
     // usage: tupleSvc << hadronInfo
     // function: save all aviable information to the tupleSvc
-    template <class T> TupleSvc& operator<<(const T&  y);
+    template <class T>
+    TupleSvc& operator<<(T& y);
 
    private:
-    NTuple::Tuple *m_tp;
+    NTuple::Tuple* m_tp;
     NTuple::Item<int>* I_Ptr;
     NTuple::Item<double>* D_Ptr;
     NTuple::Array<double>* Vd_Ptr;
@@ -50,7 +52,7 @@ class TupleSvc {
 #endif
 
 template <class InfoT>
-bool TupleSvc::Register(const InfoT& gInfo) {
+bool TupleSvc::Register(InfoT& gInfo) {
     if (m_tp == NULL) {
         return false;
     }
@@ -78,9 +80,8 @@ bool TupleSvc::Register(const InfoT& gInfo) {
         if (gInfo.GetIndex(*itr) == std::string("NULL")) {
             continue;
         }
-        string& index = gInfo.GetIndex(*itr);
-        if (std::find(i_I.begin(), i_I.end(), index) ==
-            i_I.end()) {
+        const string& index = gInfo.GetIndex(*itr);
+        if (i_I.find(index) == i_I.end()) {
             std::cout << "Error, When add item " << *itr
                       << ", we are told need one  Item<int> " << index
                       << "but, we can't find it now!" << std::endl;
@@ -101,7 +102,7 @@ bool TupleSvc::Register(const InfoT& gInfo) {
     tmpAllInfo = gInfo.GetType("double");
     int dI = i_D.size(), dVI = i_Vd.size();
     for (itr = tmpAllInfo.begin(); itr != tmpAllInfo.end(); ++itr) {
-        string& index = gInfo.GetIndex(*itr);
+        const string& index = gInfo.GetIndex(*itr);
         int length = gInfo.GetLength(*itr);
         if (length == 1) {
             if (i_D.size() >= m_MaxSizeD) {
@@ -128,8 +129,7 @@ bool TupleSvc::Register(const InfoT& gInfo) {
             continue;
         }
         // index info
-        if (std::find(i_I.begin(), i_I.end(), index) ==
-            i_I.end()) {
+        if (i_I.find(index) == i_I.end()) {
             std::cout << "Error, When add item " << *itr
                       << ", we are told need one  Item<int> " << index
                       << "but, we can't find it now!" << std::endl;
@@ -137,9 +137,9 @@ bool TupleSvc::Register(const InfoT& gInfo) {
         }
         if (i_Vd.size() >= m_MaxSizeVd) {
             std::cout << "Error, the maximum Array<double> size is "
-                          << m_MaxSizeVd << ", but now we are adding the "
-                          << m_MaxSizeVd + 1 << "-th Item" << std::endl;
-                return false;
+                      << m_MaxSizeVd << ", but now we are adding the "
+                      << m_MaxSizeVd + 1 << "-th Item" << std::endl;
+            return false;
         }
         int i = i_I[index];
         m_tp->addIndexedItem(*itr, I_Ptr[i], Vd_Ptr[dVI]);
@@ -164,7 +164,7 @@ bool TupleSvc::Register(const InfoT& gInfo) {
     // check the length
 }
 template <class InfoT>
-TupleSvc& TupleSvc::operator<<(const InfoT&  gInfo) {
+TupleSvc& TupleSvc::operator<<(InfoT& gInfo) {
     // double
     vector<string> allInfo = gInfo.GetType("double");
     vector<string>::iterator itr;
@@ -173,7 +173,7 @@ TupleSvc& TupleSvc::operator<<(const InfoT&  gInfo) {
     vector<double> Vd;
     string gIndex;
     int i;
-    for (itr = allInfo.begin(); itr != allInfo.end(); itr++){
+    for (itr = allInfo.begin(); itr != allInfo.end(); itr++) {
         int length = gInfo.GetLength(*itr);
         string gIndex = gInfo.GetIndex(*itr);
         // check the index, if the index exist, the assign index first!
@@ -186,34 +186,34 @@ TupleSvc& TupleSvc::operator<<(const InfoT&  gInfo) {
         // if not, choose the assgin to a list
         if (length == 1) {
             // check exist
-            if (i_D.find(*itr) == i_D.end()){
-                cout << "Error, sorry we didn't find \"" << gInfo.GetName() <<"\". "
-                    << *itr << "()"
-                    << ", you should Register it first at Initial()" << endl;
+            if (i_D.find(*itr) == i_D.end()) {
+                cout << "Error, sorry we didn't find \"" << gInfo.GetName()
+                     << "\". " << *itr << "()"
+                     << ", you should Register it first at Initial()" << endl;
                 continue;
             }
             index = i_D[*itr];
             gInfo.GetInfoD(*itr, tmpInfo);
             this->D_Ptr[index] = tmpInfo;
-        }  else {
+        } else {
             // check exist
-            if (i_Vd.find(*itr) == i_Vd.end()){
-                cout << "Error, sorry we didn't find \"" << gInfo.GetName() <<"\". "
-                    << *itr << "()"
-                    << ", you should Register it first at Initial()" << endl;
+            if (i_Vd.find(*itr) == i_Vd.end()) {
+                cout << "Error, sorry we didn't find \"" << gInfo.GetName()
+                     << "\". " << *itr << "()"
+                     << ", you should Register it first at Initial()" << endl;
                 continue;
             }
             index = i_Vd[*itr];
-            gInfo.GetInfoD(*itr, Vd);
+            gInfo.GetInfoVd(*itr, Vd);
             for (int i = 0; i < Vd.size(); ++i) {
                 this->Vd_Ptr[index][i] = Vd[i];
             }
-        }  
+        }
     }
     // int
     vector<int> Vi;
     allInfo = gInfo.GetType("int");
-    for (itr = allInfo.begin(); itr != allInfo.end(); ++itr){
+    for (itr = allInfo.begin(); itr != allInfo.end(); ++itr) {
         gIndex = gInfo.GetIndex(*itr);
         if (gIndex != "NULL") {
             gInfo.GetInfoI(gIndex, i);
@@ -222,22 +222,23 @@ TupleSvc& TupleSvc::operator<<(const InfoT&  gInfo) {
         length = gInfo.GetLength(*itr);
         if (length == 1) {
             // check exist
-            if (i_I.find(*itr) == i_I.end()){
-                cout << "Error, sorry we didn't find \"" << gInfo.GetName() <<"\". "
-                    << *itr << "()"
-                    << ", you should Register it first at Initial()" << endl;
+            if (i_I.find(*itr) == i_I.end()) {
+                cout << "Error, sorry we didn't find \"" << gInfo.GetName()
+                     << "\". " << *itr << "()"
+                     << ", you should Register it first at Initial()" << endl;
                 continue;
             }
             index = i_I[*itr];
             gInfo.GetInfoI(*itr, i);
             this->I_Ptr[index] = i;
             // check exist
-        }  else {
-            if (i_I.find(*itr) == i_I.end()){
-                cout << "Error, sorry we didn't find \"" << gInfo.GetName() <<"\". "
-                    << *itr << "()"
-                    << ", you may be need to Register it first at Initial()" << endl 
-                    << ", or check the type: <int> or <double>" << endl;
+        } else {
+            if (i_I.find(*itr) == i_I.end()) {
+                cout << "Error, sorry we didn't find \"" << gInfo.GetName()
+                     << "\". " << *itr << "()"
+                     << ", you may be need to Register it first at Initial()"
+                     << endl << ", or check the type: <int> or <double>"
+                     << endl;
                 continue;
             }
             index = i_Vi[*itr];
@@ -245,25 +246,25 @@ TupleSvc& TupleSvc::operator<<(const InfoT&  gInfo) {
             for (int i = 0; i < Vi.size(); ++i) {
                 this->Vi_Ptr[index][i] = Vi[i];
             }
-        }  
+        }
     }
     // HepLorentzVector
     allInfo = gInfo.GetType("HepLorentzVector");
     HepLorentzVector p4;
-    for (itr = allInfo.begin(); itr != allInfo.end(); itr++){
-        if (i_Vd.find(*itr) == i_Vd.end()){
-            cout << "Error, sorry we didn't find \"" << gInfo.GetName() <<"\". "
-                << *itr << "()"
-                << ", you should Register it first at Initial()" << endl;
+    for (itr = allInfo.begin(); itr != allInfo.end(); itr++) {
+        if (i_Vd.find(*itr) == i_Vd.end()) {
+            cout << "Error, sorry we didn't find \"" << gInfo.GetName()
+                 << "\". " << *itr << "()"
+                 << ", you should Register it first at Initial()" << endl;
             continue;
         }
         gInfo.GetInfoH(*itr, p4);
         index = i_Vd[*itr];
-        for(int i=0; i<4; ++i) {
+        for (int i = 0; i < 4; ++i) {
             this->Vd_Ptr[index][i] = p4[i];
         }
     }
-    return *this; 
+    return *this;
 }
 
 static TupleSvc gTupleSvc;

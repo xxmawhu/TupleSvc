@@ -1,5 +1,5 @@
 /* ====================================================
-# Generate by genBulkRegister.py
+# Generate by genExpress.py
 #   Author        : Xin-Xin MA
 #   Email         : xxmawhu@163.com
 # ====================================================*/
@@ -8,99 +8,114 @@
 #include "HadronInfo/gHadronInfo.h"
 #include "TupleSvc/DecayChainSvc.h"
 
-bool DecayChainSvc::BulkRegister(const DecayTree& decayTree,
-                                 TupleSvc& tupleSvc) {
-    bool status = true;
+void DecayChainSvc::Express(const CDCandidate& best, TupleSvc& tupleSvc) {
     std::string name;
     int pid;
-    for (int i = 0; i < decayTree.size(); ++i) {
-        pid = abs(decayTree.PID(i));
-        name = decayTree.GetName(i);
+    for (int i = 0; i < m_decayTree.size(); ++i) {
+        pid = abs(m_decayTree.PID(i));
+        name = m_decayTree.GetName(i);
         if (pid == Type::ElectronInfo) {
             gElectronInfo.SetName(name);
-            status = status && SubRegister(gElectronInfo, tupleSvc);
+            gElectronInfo.Feed(best.decay().child(i));
+            tupleSvc << gElectronInfo;
             continue;
         }
         if (pid == Type::ShowerInfo) {
             gShowerInfo.SetName(name);
-            status = status && SubRegister(gShowerInfo, tupleSvc);
+            gShowerInfo.Feed(best.decay().child(i));
+            tupleSvc << gShowerInfo;
             continue;
         }
         if (pid == Type::Pi0Info) {
             gPi0Info.SetName(name);
-            status = status && SubRegister(gPi0Info, tupleSvc);
+            gPi0Info.Feed(best.decay().child(i));
+            tupleSvc << gPi0Info;
             continue;
         }
         if (pid == Type::PionInfo) {
             gPionInfo.SetName(name);
-            status = status && SubRegister(gPionInfo, tupleSvc);
+            gPionInfo.Feed(best.decay().child(i));
+            tupleSvc << gPionInfo;
             continue;
         }
         if (pid == Type::EtaInfo) {
             gEtaInfo.SetName(name);
-            status = status && SubRegister(gEtaInfo, tupleSvc);
+            gEtaInfo.Feed(best.decay().child(i));
+            tupleSvc << gEtaInfo;
             continue;
         }
         if (pid == Type::OmegaInfo) {
             gOmegaInfo.SetName(name);
-            status = status && SubRegister(gOmegaInfo, tupleSvc);
+            gOmegaInfo.Feed(best.decay().child(i));
+            tupleSvc << gOmegaInfo;
             continue;
         }
         if (pid == Type::KsInfo) {
             gKsInfo.SetName(name);
-            status = status && SubRegister(gKsInfo, tupleSvc);
+            gKsInfo.Feed(best.decay().child(i));
+            tupleSvc << gKsInfo;
             continue;
         }
         if (pid == Type::KaonInfo) {
             gKaonInfo.SetName(name);
-            status = status && SubRegister(gKaonInfo, tupleSvc);
+            gKaonInfo.Feed(best.decay().child(i));
+            tupleSvc << gKaonInfo;
             continue;
         }
         if (pid == Type::PhiInfo) {
             gPhiInfo.SetName(name);
-            status = status && SubRegister(gPhiInfo, tupleSvc);
+            gPhiInfo.Feed(best.decay().child(i));
+            tupleSvc << gPhiInfo;
             continue;
         }
         if (pid == Type::ProtonInfo) {
             gProtonInfo.SetName(name);
-            status = status && SubRegister(gProtonInfo, tupleSvc);
+            gProtonInfo.Feed(best.decay().child(i));
+            tupleSvc << gProtonInfo;
             continue;
         }
         if (pid == Type::LambdaInfo) {
             gLambdaInfo.SetName(name);
-            status = status && SubRegister(gLambdaInfo, tupleSvc);
+            gLambdaInfo.Feed(best.decay().child(i));
+            tupleSvc << gLambdaInfo;
             continue;
         }
         if (pid == Type::SigmapInfo) {
             gSigmapInfo.SetName(name);
-            status = status && SubRegister(gSigmapInfo, tupleSvc);
+            gSigmapInfo.Feed(best.decay().child(i));
+            tupleSvc << gSigmapInfo;
             continue;
         }
         if (pid == Type::Sigma0Info) {
             gSigma0Info.SetName(name);
-            status = status && SubRegister(gSigma0Info, tupleSvc);
+            gSigma0Info.Feed(best.decay().child(i));
+            tupleSvc << gSigma0Info;
             continue;
         }
         if (pid == Type::XimInfo) {
             gXimInfo.SetName(name);
-            status = status && SubRegister(gXimInfo, tupleSvc);
+            gXimInfo.Feed(best.decay().child(i));
+            tupleSvc << gXimInfo;
             continue;
         }
         if (pid == Type::Xi0Info) {
             gXi0Info.SetName(name);
-            status = status && SubRegister(gXi0Info, tupleSvc);
+            gXi0Info.Feed(best.decay().child(i));
+            tupleSvc << gXi0Info;
             continue;
         }
         if (pid == Type::OmegamInfo) {
             gOmegamInfo.SetName(name);
-            status = status && SubRegister(gOmegamInfo, tupleSvc);
+            gOmegamInfo.Feed(best.decay().child(i));
+            tupleSvc << gOmegamInfo;
             continue;
         }
         if (pid == Type::EtaV3PiInfo) {
             gEtaV3PiInfo.SetName(name);
-            status = status && SubRegister(gEtaV3PiInfo, tupleSvc);
+            gEtaV3PiInfo.Feed(best.decay().child(i));
+            tupleSvc << gEtaV3PiInfo;
             continue;
         }
     }
-    return status;
+    return;
 }
