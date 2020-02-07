@@ -37,7 +37,6 @@ class DecayChainSvc {
 
    private:
     DecayTree m_decayTree;
-    // CDDecayList::iterator m_BestCandidate;
 };
 #endif  // _DECAYMODE_H
 
