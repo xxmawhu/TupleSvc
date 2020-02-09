@@ -38,6 +38,6 @@ class DecayChainSvc {
    private:
     DecayTree m_decayTree;
 };
+static DecayChainSvc gDecayChainSvc;
 #endif  // _DECAYMODE_H
 
-static DecayChainSvc gDecayChainSvc;

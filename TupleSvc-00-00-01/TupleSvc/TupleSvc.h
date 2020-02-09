@@ -49,7 +49,6 @@ class TupleSvc {
     int m_MaxSizeI, m_MaxSizeD, m_MaxSizeVd, m_MaxSizeVi;
     map<std::string, int> i_D, i_Vd, i_I, i_Vi;
 };
-#endif
 
 template <class InfoT>
 bool TupleSvc::Register(InfoT& gInfo) {
@@ -268,3 +267,4 @@ TupleSvc& TupleSvc::operator<<(InfoT& gInfo) {
 }
 
 static TupleSvc gTupleSvc;
+#endif
