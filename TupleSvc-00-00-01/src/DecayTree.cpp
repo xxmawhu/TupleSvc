@@ -28,10 +28,10 @@ DecayTree::DecayTree(const vector<int> &fid) {
         }
     }
     // set the particle name
-    string name(""), dd;
+    string name, dd;
     m_particleInfo.SetChildren(fid);
     for (int i = 0; i < fid.size(); ++i) {
-        name = m_particleInfo.Name(i);
+        name = m_particleInfo.Name(fid[i]);
         if (m_particleIndex[i] > 1) {
             std::stringstream ss;
             ss << m_particleIndex[i];
