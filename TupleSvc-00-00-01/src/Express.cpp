@@ -11,9 +11,13 @@
 void DecayChainSvc::Express(const CDCandidate& best, TupleSvc& tupleSvc) {
     std::string name;
     int pid;
+ ///   cout << "m_decayTree.size() = " << m_decayTree.size() << endl;
     for (int i = 0; i < m_decayTree.size(); ++i) {
         pid = abs(m_decayTree.PID(i));
+    ///   cout << "i = " << i << endl;
+    ///   cout << "pid  = " << pid << endl;
         name = m_decayTree.GetName(i);
+    ///    cout << "name  = " << name << endl;
         if (pid == Type::ElectronInfo) {
             gElectronInfo.SetName(name);
             gElectronInfo.Feed(best.decay().child(i));

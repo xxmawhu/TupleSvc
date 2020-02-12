@@ -10,7 +10,6 @@
 #
 # ====================================================*/
 #include <iostream>
-#include "HadronInfo/TrackInfo.h"
 #include "HadronInfo/ShowerInfo.h"
 #include "HadronInfo/ElectronInfo.h"
 #include "HadronInfo/KaonInfo.h"
@@ -36,9 +35,9 @@ TupleSvc::TupleSvc(int maxI, int maxD, int maxVi, int maxVd)
  //  std::cout << "Info in <TupleSvc::TupleSvc>:"
  //     <<" maxI = " << maxI<< std::endl;
    m_MaxSizeI = maxI;
- //  D_Ptr = new NTuple::Item<double>[maxD];
+   D_Ptr = new NTuple::Item<double>[maxD];
    m_MaxSizeD = maxD;
- //  Vi_Ptr = new NTuple::Array<int>[maxVi];
+  Vi_Ptr = new NTuple::Array<int>[maxVi];
    m_MaxSizeVi = maxVi;
  //  Vd_Ptr = new NTuple::Array<double>[maxVd];
    m_MaxSizeVd = maxVd;

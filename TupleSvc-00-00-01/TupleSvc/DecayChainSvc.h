@@ -23,7 +23,7 @@ class DecayChainSvc {
    public:
     DecayChainSvc() {};
     ~DecayChainSvc() {};
-    void SetDecayTree(const DecayTree& decayTree) { m_decayTree = decayTree; }
+    void SetDecayTree(const DecayTree decayTree) { m_decayTree = decayTree; }
     template <class T>
     bool SubRegister(T& aInfo, TupleSvc& tupleSvc) {
         return tupleSvc.Register(aInfo);
