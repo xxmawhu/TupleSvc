@@ -20,15 +20,18 @@ class DecayTree {
     DecayTree(const vector<int>& fid);
     virtual ~DecayTree();
     // the particle name with index, such as pion, pion2
-    const vector<int>& getFID() const;
+    const vector<int>& GetFID() const;
     string GetName(const int& i) const;
     int PID(const int&) const;
     // return the index, input the particle name
     int Index(const string& particle_name);
     // the length of particle list
     int size() const;
+    bool SelfConjugate() const;
     // the the decay mode of the mode of particle `i`
     const DecayTree& decay(const int& i);
+    const DecayTree& GetChannelCC() const;
+    friend bool operator==(const DecayTree&, const DecayTree&);
 
    private:
     vector<int> m_finalParticleID;

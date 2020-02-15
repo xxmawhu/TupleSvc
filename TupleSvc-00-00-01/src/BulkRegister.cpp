@@ -15,7 +15,7 @@ bool DecayChainSvc::BulkRegister(const DecayTree& decayTree,
     int pid;
     for (int i = 0; i < decayTree.size(); ++i) {
         pid = abs(decayTree.PID(i));
-        name = decayTree.GetName(i);
+        name = m_title + decayTree.GetName(i);
         if (pid == Type::ElectronInfo) {
             gElectronInfo.SetName(name);
             status = status && SubRegister(gElectronInfo, tupleSvc);

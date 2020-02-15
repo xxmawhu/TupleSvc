@@ -35,6 +35,9 @@ def gen(info='KsInfo'):
     s=""
     s += "if (pid == Type::%s){"%(info)
     s += "g{}.SetName(name);".format(info)
+    s += "if (m_decayTree.size()==1 && best.decay().children().size()>1)".format(info)
+    s += "g{}.Feed(best);".format(info)
+    s += "if (m_decayTree.size()>1)".format(info)
     s += "g{}.Feed(best.decay().child(i));".format(info)
     s += 'tupleSvc << g{};'.format(info)
     s += 'continue;}\n'

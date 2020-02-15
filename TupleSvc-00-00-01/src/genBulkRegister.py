@@ -29,7 +29,7 @@ bool DecayChainSvc::BulkRegister(const DecayTree& decayTree, TupleSvc& tupleSvc)
     int pid;
     for(int i=0; i< decayTree.size(); ++i){
         pid = abs(decayTree.PID(i));
-        name =  decayTree.GetName(i);
+        name =  m_title + decayTree.GetName(i);
 """
 
 
