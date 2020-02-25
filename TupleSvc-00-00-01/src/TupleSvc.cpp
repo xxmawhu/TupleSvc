@@ -42,10 +42,10 @@ TupleSvc::TupleSvc(int maxI, int maxD, int maxVi, int maxVd)
 }
 
 TupleSvc::~TupleSvc() {
-   delete[] I_Ptr;
-   delete[] D_Ptr;
-   delete[] Vi_Ptr;
-   delete[] Vd_Ptr;
+   delete [] I_Ptr;
+   delete [] D_Ptr;
+   delete [] Vi_Ptr;
+   delete [] Vd_Ptr;
 }
 
 bool TupleSvc::BindTuple(NTuple::Tuple *tuple) {

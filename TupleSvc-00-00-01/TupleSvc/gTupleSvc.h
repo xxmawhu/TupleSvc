@@ -12,5 +12,5 @@
 #ifndef TupleSvc_gTupleSvc_H
 #define TupleSvc_gTupleSvc_H
 #include "TupleSvc/TupleSvc.h"
-static TupleSvc gTupleSvc(20, 200, 10, 20);
+//static TupleSvc gTupleSvc(20, 200, 10, 20);
 #endif

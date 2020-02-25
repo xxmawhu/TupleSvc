@@ -17,6 +17,8 @@
 #include <sstream>
 #include <algorithm>
 using std::vector;
+using std::cout;
+using std::endl;
 DecayTree::DecayTree() {}
 
 DecayTree::DecayTree(const vector<int> &fid) {
@@ -30,7 +32,7 @@ DecayTree::DecayTree(const vector<int> &fid) {
     }
     // set the particle name
     string name, dd;
-    m_particleInfo.SetChildren(fid);
+    // m_particleInfo.SetChildren(fid);
     for (int i = 0; i < fid.size(); ++i) {
         name = m_particleInfo.Name(fid[i]);
         if (m_particleIndex[i] > 1) {
@@ -44,9 +46,6 @@ DecayTree::DecayTree(const vector<int> &fid) {
 }
 
 DecayTree::~DecayTree() {
-    m_finalParticleID.clear();
-    m_particleIndex.clear();
-    m_particleName.clear();
 }
 
 const vector<int> &DecayTree::GetFID() const { return m_finalParticleID; }
@@ -79,14 +78,14 @@ const DecayTree &DecayTree::decay(const int &i) {
 }
 const DecayTree& DecayTree::GetChannelCC() const {
     vector<int> fidcc;
-    for (vector<int>::const_iterator itr = m_finalParticleID.begin(); 
-            itr != m_finalParticleID.end(); ++itr) {
-        if (majorana.contained(*itr)) {
-            fidcc.push_back(*itr);
-        } else {
-            fidcc.push_back((*itr) * (-1));
-        }
-    }
+   for (vector<int>::const_iterator itr = m_finalParticleID.begin(); 
+           itr != m_finalParticleID.end(); ++itr) {
+       if (selfConjugate(*itr)) {
+           fidcc.push_back(*itr);
+       } else {
+           fidcc.push_back((*itr) * (-1));
+       }
+   }
     return DecayTree(fidcc);
 }
 bool operator==(const DecayTree& a, const DecayTree&b) {
@@ -104,4 +103,29 @@ bool operator==(const DecayTree& a, const DecayTree&b) {
 bool DecayTree::SelfConjugate() const{
     const DecayTree& conjugate = this->GetChannelCC();
     return (conjugate == *this);
+}
+
+std::ostream& operator<<(std::ostream& os, const DecayTree& dt) {
+    os << "(";
+    if (dt.size() == 0) {
+        os << ")";
+    } else {
+        for (int i =0; i< dt.size() -1; ++i) {
+            os << dt.PID(i) << ", ";
+        }
+        os << dt.PID(dt.size()-1) << ")";
+    }
+    os << "L = " << dt.size() ;
+    os << ";" << endl;
+    // name
+    os << "(";
+    if (dt.size() == 0) {
+        os << ")";
+    } else {
+        for (int i =0; i< dt.size() -1; ++i) {
+            os << dt.GetName(i) << ", ";
+        }
+        os << dt.GetName(dt.size()-1) << ")";
+    }
+    return os;
 }

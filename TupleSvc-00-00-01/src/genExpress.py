@@ -28,7 +28,7 @@ void DecayChainSvc::Express(const CDCandidate& best, TupleSvc& tupleSvc) {
     int pid;
     for(int i=0; i< m_decayTree.size(); ++i){
         pid = abs(m_decayTree.PID(i));
-        name =  m_decayTree.GetName(i);
+        name =  m_decayTree.GetName(i) +GetTitle();
 """
 
 def gen(info='KsInfo'):

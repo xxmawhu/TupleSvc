@@ -32,6 +32,7 @@ class DecayTree {
     const DecayTree& decay(const int& i);
     const DecayTree& GetChannelCC() const;
     friend bool operator==(const DecayTree&, const DecayTree&);
+    friend std::ostream& operator<<(std::ostream& os, const DecayTree& dt);
 
    private:
     vector<int> m_finalParticleID;

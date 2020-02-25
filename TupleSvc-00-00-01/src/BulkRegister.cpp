@@ -15,7 +15,7 @@ bool DecayChainSvc::BulkRegister(const DecayTree& decayTree,
     int pid;
     for (int i = 0; i < decayTree.size(); ++i) {
         pid = abs(decayTree.PID(i));
-        name = m_title + decayTree.GetName(i);
+        name = decayTree.GetName(i) + GetTitle();
         if (pid == Type::ElectronInfo) {
             gElectronInfo.SetName(name);
             status = status && SubRegister(gElectronInfo, tupleSvc);
@@ -39,11 +39,6 @@ bool DecayChainSvc::BulkRegister(const DecayTree& decayTree,
         if (pid == Type::EtaInfo) {
             gEtaInfo.SetName(name);
             status = status && SubRegister(gEtaInfo, tupleSvc);
-            continue;
-        }
-        if (pid == Type::OmegaInfo) {
-            gOmegaInfo.SetName(name);
-            status = status && SubRegister(gOmegaInfo, tupleSvc);
             continue;
         }
         if (pid == Type::KsInfo) {
@@ -94,11 +89,6 @@ bool DecayChainSvc::BulkRegister(const DecayTree& decayTree,
         if (pid == Type::OmegamInfo) {
             gOmegamInfo.SetName(name);
             status = status && SubRegister(gOmegamInfo, tupleSvc);
-            continue;
-        }
-        if (pid == Type::EtaV3PiInfo) {
-            gEtaV3PiInfo.SetName(name);
-            status = status && SubRegister(gEtaV3PiInfo, tupleSvc);
             continue;
         }
     }

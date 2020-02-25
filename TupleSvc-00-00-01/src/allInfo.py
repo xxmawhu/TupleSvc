@@ -4,7 +4,7 @@ allInfo = [
     "Pi0Info",
     "PionInfo",
     "EtaInfo",
-    "OmegaInfo",
+  #  "OmegaInfo",
     "KsInfo",
     "KaonInfo",
     "PhiInfo",
@@ -15,5 +15,5 @@ allInfo = [
     "XimInfo",
     "Xi0Info",
     "OmegamInfo",
-    "EtaV3PiInfo",
+   # "EtaV3PiInfo",
 ]

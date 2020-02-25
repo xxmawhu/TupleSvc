@@ -23,9 +23,10 @@
 class DecayChainSvc {
    public:
     DecayChainSvc();
-    ~DecayChainSvc() {};
+    ~DecayChainSvc();
     void SetDecayTree(const DecayTree decayTree) { m_decayTree = decayTree; }
     void SetTitle(const std::string& title) { m_title = title; }
+    string GetTitle() const {return m_title;}
     template <class T>
     bool SubRegister(T& aInfo, TupleSvc& tupleSvc) {
         return tupleSvc.Register(aInfo);
@@ -36,11 +37,12 @@ class DecayChainSvc {
     }
 
     void Express(const CDCandidate& best, TupleSvc& tupleSvc);
+    int GetCC(const CDCandidate& tag, const DecayTree&);
 
    private:
     DecayTree m_decayTree;
     std::string m_title;
 };
-static DecayChainSvc gDecayChainSvc;
+// extern DecayChainSvc gDecayChainSvc;
 #endif  // _DECAYMODE_H
 
