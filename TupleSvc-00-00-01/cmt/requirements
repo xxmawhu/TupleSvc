@@ -8,6 +8,7 @@ use BesDChain    BesDChain-*     Event
  
 use HadronInfo HadronInfo-* Utilities
 
+macro_append TupleSvc_cppflags "-Wall"
  
 apply_pattern installed_linkopts
 library TupleSvc *.cpp
@@ -15,3 +16,4 @@ apply_pattern package_linkopts
 apply_pattern package_stamps
 apply_pattern ld_library_path
 apply_pattern package_shlibflags
+macro_append TupleSvc_cppflags " -Wall"

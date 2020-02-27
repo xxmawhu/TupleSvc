@@ -13,7 +13,7 @@ void DecayChainSvc::Express(const CDCandidate& best, TupleSvc& tupleSvc) {
     int pid;
     for (int i = 0; i < m_decayTree.size(); ++i) {
         pid = abs(m_decayTree.PID(i));
-        name = m_decayTree.GetName(i);
+        name = m_decayTree.GetName(i) + GetTitle();
         if (pid == Type::ElectronInfo) {
             gElectronInfo.SetName(name);
             if (m_decayTree.size() == 1 && best.decay().children().size() > 1)
@@ -53,14 +53,6 @@ void DecayChainSvc::Express(const CDCandidate& best, TupleSvc& tupleSvc) {
                 gEtaInfo.Feed(best);
             if (m_decayTree.size() > 1) gEtaInfo.Feed(best.decay().child(i));
             tupleSvc << gEtaInfo;
-            continue;
-        }
-        if (pid == Type::OmegaInfo) {
-            gOmegaInfo.SetName(name);
-            if (m_decayTree.size() == 1 && best.decay().children().size() > 1)
-                gOmegaInfo.Feed(best);
-            if (m_decayTree.size() > 1) gOmegaInfo.Feed(best.decay().child(i));
-            tupleSvc << gOmegaInfo;
             continue;
         }
         if (pid == Type::KsInfo) {
@@ -129,8 +121,9 @@ void DecayChainSvc::Express(const CDCandidate& best, TupleSvc& tupleSvc) {
         }
         if (pid == Type::Xi0Info) {
             gXi0Info.SetName(name);
-            if (m_decayTree.size() == 1 && best.decay().children().size() > 1)
+            if (m_decayTree.size() == 1 && best.decay().children().size() > 1) {
                 gXi0Info.Feed(best);
+            }
             if (m_decayTree.size() > 1) gXi0Info.Feed(best.decay().child(i));
             tupleSvc << gXi0Info;
             continue;
@@ -141,15 +134,6 @@ void DecayChainSvc::Express(const CDCandidate& best, TupleSvc& tupleSvc) {
                 gOmegamInfo.Feed(best);
             if (m_decayTree.size() > 1) gOmegamInfo.Feed(best.decay().child(i));
             tupleSvc << gOmegamInfo;
-            continue;
-        }
-        if (pid == Type::EtaV3PiInfo) {
-            gEtaV3PiInfo.SetName(name);
-            if (m_decayTree.size() == 1 && best.decay().children().size() > 1)
-                gEtaV3PiInfo.Feed(best);
-            if (m_decayTree.size() > 1)
-                gEtaV3PiInfo.Feed(best.decay().child(i));
-            tupleSvc << gEtaV3PiInfo;
             continue;
         }
     }

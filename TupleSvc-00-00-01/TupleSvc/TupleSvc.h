@@ -9,10 +9,10 @@
 #   Describe      :
 #Debug tip:
 
-* replace "///" with ";;;"
-  %s%///%;;;
+* replace "///" with "///"
+  %s%///%///
 * recovery
-  %s%;;;%///
+  %s%///%///
 # ====================================================*/
 #ifndef TUPLESVC_H
 #define TUPLESVC_H
@@ -392,14 +392,15 @@ TupleSvc& TupleSvc::operator<<(InfoT& gInfo) {
                  << ", you should Register it first at Initial()" << endl;
             continue;
         }
+        /// cout << "info in <TupleSvc::operator<< HepLorentzVector>:"; 
+        /// cout << " begin GetInfoH for " << *itr << endl;
         gInfo.GetInfoH(*itr, p4);
-        index = i_Vd[(*itr)+infoname];
+        index = i_Vd[(*itr) + infoname];
+        /// cout << "index = " << index << endl;
         for (int i = 0; i < 4; ++i) {
             this->Vd_Ptr[index][i] = p4[i];
         }
     }
     return *this;
 }
-
-static TupleSvc gTupleSvc;
 #endif

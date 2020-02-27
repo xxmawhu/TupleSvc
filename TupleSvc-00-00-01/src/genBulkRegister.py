@@ -12,6 +12,7 @@
 #
 # ====================================================*/
 
+from allInfo import *
 import os
 include = """/* ====================================================
 # Generate by genBulkRegister.py
@@ -29,29 +30,8 @@ bool DecayChainSvc::BulkRegister(const DecayTree& decayTree, TupleSvc& tupleSvc)
     int pid;
     for(int i=0; i< decayTree.size(); ++i){
         pid = abs(decayTree.PID(i));
-        name =  m_title + decayTree.GetName(i);
+        name =  decayTree.GetName(i) + GetTitle();
 """
-
-
-allInfo= [  "ElectronInfo" ,
-        "ShowerInfo",
-        "Pi0Info",
-        "PionInfo",
-        "EtaInfo",
-        "OmegaInfo",
-        "KsInfo",
-        "KaonInfo",
-        "PhiInfo",
-        "ProtonInfo",
-        "LambdaInfo",
-        "SigmapInfo",
-        "Sigma0Info",
-        "XimInfo",
-        "Xi0Info",
-        "OmegamInfo",
-        "EtaV3PiInfo",
-        ]
-
 
 def gen(info='KsInfo'):
     s=""
